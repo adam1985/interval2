@@ -1,0 +1,22 @@
+*{padding:0;margin:0;}
+a {
+  color: #00B7FF;
+}
+.hide{ display: none;}
+li{ list-style: none;}
+.fl{float:left}.fr{float:right}.cl{zoom:1}.cl:after{content:"";display:block;height:0;clear:both;visibility:hidden}
+.wrapper{ width : 1000px; margin : 20px auto;}
+.interval-header ul{margin-bottom: 15px;}
+.interval-header li{ float: left; margin-right: 20px;}
+.interval-header li label{margin-right: 3px;}
+.interval-header input{ height: 30px; padding-left: 3px;}
+.interval-header select{ height: 30px; width: 100px;}
+.interval-header select.fsend-select{ width: 463px;}
+.add-interval,.view-interval{ cursor: pointer;}
+.interval-body{ margin-top: 20px;}
+.loading{ width: 250px; height: 40px; border-radius: 5px; text-align: center; line-height: 40px; background: #eee; position: absolute; left: 50%; top: 50%; margin: -20px 0 0 -100px;}
+
+.interval-list table{width: 100%;}
+.interval-list table td,.interval-list table th{ text-align: left;}
+.interval-list table td { height: 35px;}
+.interval-list table input{ height: 25px;cursor: pointer;}
