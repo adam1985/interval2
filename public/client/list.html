@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+	<script src="/javascripts/jquery-2.1.1.min.js"></script>
+    <script src="/javascripts/template.js"></script>
+    <script src="/javascripts/My97DatePicker/WdatePicker.js"></script>
+  </head>
+  <body>
+	<div class="wrapper">
+		<div class="addpage-header">
+            <form id="addpage-form" action="/adduser" method="get">
+                <ul class="input-list">
+                    <li>
+                        <label>用户名：</label>
+                        <input name="user_name" type="text" value="" />
+                    </li>
+                    <li>
+                        <label>QQ：</label>
+                        <input name="qq" type="text" value="" />
+                    </li>
+                    <li>
+                        <label>手机：</label>
+                        <input name="phone" type="text" value="" />
+                    </li>
+                    <li>
+                        <label>微信：</label>
+                        <input name="weixin" type="text" value="" />
+                    </li>
+                    <li>
+                        <label>重复执行数量：</label>
+                        <input name="multiple" type="text" value="2" />
+                    </li>
+                    <li>
+                        <label>单次执行数量：</label>
+                        <input name="single" type="text" value="10" />
+                    </li>
+                    <li>
+                        <label>平台数量：</label>
+                        <input name="platform" type="text" value="" />
+                    </li>
+                    <li>
+                        <label>过期时间：</label>
+                        <input name="expiry" class="datepicker time" id="datepicker" type="text" value="" />
+                    </li>
+                    <li>
+                        <input id="add-user" class="add-user" type="submit" value="添加用户" />
+                    </li>
+                </ul>
+            </form>
+		</div>
+
+  </div>
+  <script>
+
+      $(document).on('click', '.datepicker', function(){
+          WdatePicker({
+              el : 'datepicker',
+              skin:'twoer',
+              dateFmt:'yyyy-MM-dd'
+          });
+      });
+
+  </script>
+  </body>
+</html>

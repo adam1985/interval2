@@ -1,8 +1,10 @@
 var dateFormat = require("./dateFormat"),
     fs = require('fs'),
-    path = require('path');
+    path = require('path'),
+    rootPath = process.cwd();
     dateFormat.format();
-var tools_ = {};
+var tools_ = {},
+    userlistPath = rootPath + '/config/user.json';
 tools_.toDate = function( str ){
         str = str.toString();
         var year = +str.substr(0, 4),
@@ -140,6 +142,51 @@ tools_.interfaceDone = function( res, data, callback ){
         res.set({'Content-Type':'text/plain'});
 
         res.send(resp);
+};
+
+tools_.getUserName = function(userlist, token){
+    var userStatus = {
+            has : false,
+            token : token
+    };
+
+    tools_.each(userlist, function(key, val){
+            if( val.info ){
+                if(val.info.token == token){
+                    userStatus = {
+                        has : true,
+                        token : token,
+                        username : key
+                    };
+                    return false;
+                }
+            }
+    });
+
+    return userStatus;
+};
+
+tools_.getUserlist = function(){
+    var userlist = {};
+    if( fs.existsSync(userlistPath) ) {
+        userlist = JSON.parse(fs.readFileSync(userlistPath).toString());
+    }
+    return userlist;
+};
+
+tools_.setUserlist = function( data ){
+    fs.writeFileSync(userlistPath, JSON.stringify(data));
+};
+
+tools_.hasPlatform = function( platList, name){
+    var _hasPlatform = false;
+    tools_.each(platList, function(i, v){
+        if( v.username == name ){
+            _hasPlatform = true;
+            return false;
+        }
+    });
+    return _hasPlatform;
 };
 
 module.exports = tools_;

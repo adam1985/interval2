@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>添加公众平台</title>
+    <link rel='stylesheet' href='assets/styles/layout.css' />
+  </head>
+  <body>
+	<div class="cl wrapper">
+        <div class="fl page-nav">
+            <ul>
+                <li><a href="index.html">设置定时器</a> </li>
+                <li><a href="add.html">添加公众平台</a> </li>
+                <li><a href="list.html">管理公众平台</a> </li>
+            </ul>
+        </div>
+		<div class="fl page-wrap">
+            <form id="platform-form">
+                <ul class="input-list">
+                    <li>
+                        <label class="label">token：</label>
+                        <input name="token" id="token" type="text" datatype="*" value="" />
+                    </li>
+                    <li>
+                        <label class="label">平台名称：</label>
+                        <input name="name" type="text" datatype="*" value="" />
+                    </li>
+                    <li>
+                        <label class="label">用户名：</label>
+                        <input name="user_name" type="text" datatype="*" value="" />
+                    </li>
+                    <li>
+                        <label class="label">密码：</label>
+                        <input name="pwd" type="password" datatype="*" value="" />
+                    </li>
+                    <li>
+                        <input class="post_btn" type="button" id="add-platform" value="添加公众平台" />
+                        <span id="err-tiper" class="err-tiper"></span>
+                    </li>
+                </ul>
+            </form>
+		</div>
+  </div>
+  <script src="assets/require.min.js" data-main="assets/src/index"></script>
+  </body>
+</html>

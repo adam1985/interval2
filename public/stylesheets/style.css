@@ -20,3 +20,7 @@ li{ list-style: none;}
 .interval-list table td,.interval-list table th{ text-align: left;}
 .interval-list table td { height: 35px;}
 .interval-list table input{ height: 25px;cursor: pointer;}
+.input-list li{margin-bottom: 15px;}
+.input-list label{display: inline-block; width: 120px;}
+.input-list input{ width: 250px;  height: 20px;padding:5px; border: 1px solid #ddd;}
+.input-list .add-user{ width: 100px; height: 30px; cursor: pointer; }

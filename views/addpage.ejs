@@ -10,43 +10,58 @@
   <body>
 	<div class="wrapper">
 		<div class="addpage-header">
-            <form id="addpage-form">
-                <ul class="cl">
+            <form id="addpage-form" action="/adduser" method="get">
+                <ul class="input-list">
                     <li>
                         <label>用户名：</label>
                         <input name="user_name" type="text" value="" />
                     </li>
                     <li>
                         <label>QQ：</label>
-                        <input name="user_name" type="text" value="" />
+                        <input name="qq" type="text" value="" />
                     </li>
                     <li>
                         <label>手机：</label>
-                        <input name="user_name" type="text" value="" />
+                        <input name="phone" type="text" value="" />
                     </li>
                     <li>
                         <label>微信：</label>
-                        <input name="user_name" type="text" value="" />
+                        <input name="weixin" type="text" value="" />
                     </li>
                     <li>
-                        <label>定时器数量：</label>
-                        <input name="user_name" type="text" value="" />
+                        <label>重复执行数量：</label>
+                        <input name="multiple_a" type="text" value="2" />
+                    </li>
+                    <li>
+                        <label>单次执行数量：</label>
+                        <input name="single_a" type="text" value="10" />
                     </li>
                     <li>
                         <label>平台数量：</label>
-                        <input name="user_name" type="text" value="" />
+                        <input name="platform_a" type="text" value="" />
                     </li>
                     <li>
                         <label>过期时间：</label>
-                        <input name="time" class="datepicker time" id="datepicker" type="text" value="" />
+                        <input name="expiry" class="datepicker time" id="datepicker" type="text" value="" />
                     </li>
                     <li>
-                        <input id="add-user" class="add-user" type="button" value="添加用户" />
+                        <input id="add-user" class="add-user" type="submit" value="添加用户" />
                     </li>
                 </ul>
             </form>
 		</div>
 
   </div>
+  <script>
+
+      $(document).on('click', '.datepicker', function(){
+          WdatePicker({
+              el : 'datepicker',
+              skin:'twoer',
+              dateFmt:'yyyy-MM-dd'
+          });
+      });
+
+  </script>
   </body>
 </html>
