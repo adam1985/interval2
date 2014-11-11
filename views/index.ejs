@@ -2,22 +2,25 @@
 <html>
   <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-	<script src="/javascripts/jquery-2.1.1.min.js"></script>
-    <script src="/javascripts/template.js"></script>
-    <script src="/javascripts/My97DatePicker/WdatePicker.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <link rel='stylesheet' href='/assets/styles/style.css' />
   </head>
   <body>
-	<div class="wrapper">
+	<div class="wrapper" id="index-page">
 		<div class="interval-header">
             <form id="interval-form">
                 <ul class="cl">
                     <li>
+                        <label>用户：</label>
+                        <select id="user-select" class="platform-select" name="platform">
+
+                        </select>
+                    </li>
+                    <li>
                         <label>公众平台：</label>
                         <select id="platform-select" class="platform-select" name="platform">
-                            <% platform_lists.forEach(function(v) {  %>
-                                <option value="<%= v.name %>"><%= v.nick_name %></option>
-                            <% }) %>
+
                         </select>
                     </li>
                     <li>
@@ -118,152 +121,6 @@
             </tr>
         {{ }) }}
     </script>
-
-  <script>
-      jQuery(function(){
-
-          var loading = $('#loading');
-
-          var getFsendList = function( platform_name, cb){
-                  loading.show();
-                  $.ajax({
-                      url : '/getSeqList',
-                      type : 'get',
-                      dataType : 'json',
-                      data : {
-                          platform_name : platform_name
-                      },
-                      success : function( res ){
-                          if( res.success ) {
-                              loading.hide();
-                              $('#fsend-select').html( template.render('fsend-template', {
-                                  fsend_lists : res.data
-                              }));
-                              cb && cb();
-                          }
-                      }
-                  });
-          };
-
-
-
-          $(document).on('change', '.platform-select', function(){
-              var platform_name = this.value;
-              var runMode = $('#run-mode').val();
-
-              if( runMode == 1) {
-                  getFsendList(platform_name);
-              }
-          });
-
-          $(document).on('change', '.run-mode', function(){
-              var runMode = this.value;
-              $('.datepicker').attr('id', 'datepicker' + runMode).val('');
-              if ( runMode == 0 ){
-                  $('#fsend-box').hide();
-                  $('.fsend-select').attr('disabled', true);
-              } else if( runMode == 1)  {
-                  getFsendList($('#platform-select').val(), function(){
-                      $('.fsend-select').attr('disabled', false);
-                      $('#fsend-box').show();
-                  });
-              }
-          });
-
-          /** 加载日历控件 */
-          $(document).on('click', '.datepicker', function(){
-              var $this = $(this),
-                  $li = $this.closest('li'),
-                  html = $li.html();
-
-              var runMode = $('#run-mode').val();
-              $('.datepicker').attr('id', 'datepicker' + runMode).val('');
-              if( runMode == 0 ) {
-                  WdatePicker({
-                      el : 'datepicker' + runMode,
-                      skin:'twoer',
-                      dateFmt:'HH:mm:ss'
-                  });
-              } else if( runMode == 1) {
-                  WdatePicker({
-                      el : 'datepicker' + runMode,
-                      skin:'twoer',
-                      dateFmt:'yyyy-MM-dd HH:mm:ss'
-                  });
-              }
-          });
-
-          /** 添加定时任务 */
-          $(document).on('click', '.add-interval', function(){
-              var serializeArray = $('#interval-form').serializeArray(),
-                  fsendSelect = $('#fsend-select')[0];
-              if( !$(fsendSelect).attr('disabled') ) {
-                   var selectText = fsendSelect.options[fsendSelect.selectedIndex].text
-                  serializeArray.push({
-                      name : "title",
-                      value : selectText
-                  });
-              }
-              loading.show();
-              $.ajax({
-                  url : '/addTask',
-                  type : 'get',
-                  dataType : 'json',
-                  data : serializeArray,
-                  success : function( res ){
-                      if( res.success ) {
-                          loading.hide();
-                          $('#task-list').append( template.render('tasklist-template', {
-                              taskList : res.data
-                          }));
-                      }
-                  }
-              });
-          });
-
-          /** 删除定时任务 */
-          $(document).on('click', '.remove-interval', function(){
-              var $this = $(this),
-                  taskindex = $this.attr('data-task-index'),
-                  tr = $this.closest('tr');
-              loading.show();
-              $.ajax({
-                  url : '/removeTask',
-                  type : 'get',
-                  dataType : 'json',
-                  data : {
-                      taskindex : taskindex
-                  },
-                  success : function( res ){
-                      if( res.success ) {
-                          loading.hide();
-                          tr.remove();
-                      }
-                  }
-              });
-
-          });
-
-
-          /** 查看定时任务 */
-          $(document).on('click', '.view-interval', function(){
-              var $this = $(this);
-              loading.show();
-              $.ajax({
-                  url : '/viewInterval',
-                  type : 'get',
-                  dataType : 'json',
-                  success : function( res ){
-                      if( res.success ) {
-                          loading.hide();
-                          alert( res.data );
-                      }
-                  }
-              });
-
-          });
-
-      });
-  </script>
+  <script src="/assets/require.min.js" data-main="/assets/src/index"></script>
   </body>
 </html>

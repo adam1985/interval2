@@ -1,39 +1,97 @@
-define(['jquery', 'interface/ajax', 'My97DatePicker', 'validform', 'storage'],
-    function($, ajax, My97DatePicker, validform){
+define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'validform', 'storage'],
+    function($, ajax, template, My97DatePicker, validform){
         $(function(){
             var host = 'http://localhost:3000';
 
             /** 添加公众平台 */
-            var platformForm = $('#platform-form');
+            if( $('#add-plat').length ) {
+                var platformForm = $('#platform-form');
+                platformForm.Validform({
+                    btnSubmit:"#add-platform",
+                    tiptype:function(msg,o,cssctl){
+                        var objtip=$("#err-tiper");
+                        if(o.type != 2 ) {
+                            cssctl(objtip,o.type);
+                            objtip.show().text(msg);
+                        } else {
+                            objtip.hide();
+                        }
+                    },
+                    label:".label",
+                    beforeSubmit:function() {
+                        ajax({
+                            dataType : 'jsonp',
+                            jsonp : 'cb',
+                            url : host + '/addPlatform',
+                            data : platformForm.serialize(),
+                            success: function( res ){
+                                if( res.success ) {
+                                    token = $('#token').val();
+                                    LS.set("interval_token", token);
+                                    platformForm[0].reset();
 
-            platformForm.Validform({
-                btnSubmit:"#add-platform",
-                tiptype:function(msg,o,cssctl){
-                    var objtip=$("#err-tiper");
-                    if(o.type != 2 ) {
-                        cssctl(objtip,o.type);
-                        objtip.show().text(msg);
-                    } else {
-                        objtip.hide();
+                                }
+                                alert(res.msg);
+                            }
+                        });
+                        return false;
                     }
-                },
-                label:".label",
-                beforeSubmit:function() {
+                });
+            }
+
+            /** 管理公众平台 */
+            if( $('#plat-list').length ) {
+                var interval_token = LS.get("interval_token");
+
+                if( !interval_token ){
+                    interval_token = prompt("请您在下方输入token：");
+                }
+
+                if( interval_token ) {
                     ajax({
                         dataType : 'jsonp',
                         jsonp : 'cb',
-                        url : host + '/addPlatform',
-                        data : platformForm.serialize(),
+                        url : host + '/platformlist',
+                        data : {
+                            token : interval_token
+                        },
                         success: function( res ){
                             if( res.success ) {
-                                token = $('#token').val();
-                                LS.set("interval_token", token);
+                                LS.set("interval_token", res.data.token);
+                                $('#platform-list').html( template.render('platform-list-template', {
+                                    platform_lists : res.data.platform_lists
+                                }) );
+                            } else {
+                                alert( res.msg );
                             }
-                            alert(res.msg);
                         }
                     });
-                    return false;
+
+                    $(document).on('click', '.remove-platform', function(){
+                        var $this = $(this),
+                            tr = $this.closest('tr'),
+                            username = $this.attr('data-username');
+
+                        if( confirm('是否真要删除公众平台？') ) {
+                            ajax({
+                                dataType : 'jsonp',
+                                jsonp : 'cb',
+                                url : host + '/removePlatform',
+                                data : {
+                                    token : interval_token,
+                                    username : username
+                                },
+                                success: function( res ){
+                                    alert( res.msg );
+                                    if( res.success ) {
+                                        tr.remove();
+                                    }
+                                }
+                            });
+                        }
+                    });
                 }
-            });
+
+            }
         });
 });

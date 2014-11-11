@@ -36,6 +36,5 @@ exports.index = function(req, res){
         taskList : taskList
     });
 
-    //getList('xiaobaoduzi', function(fsend_lists){});
 
 };

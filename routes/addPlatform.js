@@ -10,31 +10,36 @@ module.exports = function(req, res){
         userStatus = tools.getUserName( userlist, token);
 
     if( userStatus.has ){
-        var platform = userlist[userStatus.username].platform || [],
+        var plat_a = tools.getCounts( userStatus.username ).plat,
             info = userlist[userStatus.username].info || {};
 
-        if( info.platform_a > platform.length ) {
-            if( tools.hasPlatform( platform, username) ) {
+        if( info.platform_a > plat_a ) {
+            if( tools.hasPlatform( userStatus.username, name ) ) {
                 tools.interfaceDone( res, {
                     success : false,
                     msg : "该公众平台已添加过，不要重复添加!"
                 }, callback);
 
             } else {
-                platform.push({
-                    name : name,
-                    username : username,
-                    pwd : pwd
-                });
+                if( tools.addUserlist({
+                    user : userStatus.username,
+                    data : {
+                        name : name,
+                        username : username,
+                        pwd : pwd
+                    }
+                }, 'platform') ) {
+                    tools.interfaceDone( res, {
+                        success : true,
+                        msg : "添加成功!"
+                    }, callback);
+                } else {
+                    tools.interfaceDone( res, {
+                        success : false,
+                        msg : "添加失败!"
+                    }, callback);
+                }
 
-                userlist[userStatus.username].platform = platform;
-
-                tools.setUserlist( userlist );
-
-                tools.interfaceDone( res, {
-                    success : true,
-                    msg : "添加成功!"
-                }, callback);
             }
         } else {
             tools.interfaceDone( res, {
