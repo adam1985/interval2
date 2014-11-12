@@ -3,7 +3,7 @@ var tools = require('../module/tools');
 module.exports = function(req, res){
 	var callback = req.query.cb,
         token = req.query.token,
-        username = req.query.username,
+        plat_name = req.query.plat_name,
         userlist = tools.getUserlist(),
         userStatus = tools.getUserName( userlist, token),
         user = userStatus.username;
@@ -11,7 +11,7 @@ module.exports = function(req, res){
     if( userStatus.has ){
         if( tools.removeUserlist( {
             user : user,
-            username : username
+            plat_name : plat_name
         }, 'platform' )) {
             tools.interfaceDone( res, {
                 success : true,

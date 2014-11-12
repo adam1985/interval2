@@ -8,6 +8,7 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , getSeqList = require('./routes/getSeqList')
+  , getPlatInfo = require('./routes/getPlatInfo')
   , addTask = require('./routes/addTask')
   , removeTask = require('./routes/removeTask')
   , viewInterval = require('./routes/viewInterval')
@@ -44,6 +45,7 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 app.get('/getSeqList', getSeqList);
+app.get('/getPlatInfo', getPlatInfo);
 app.get('/removeTask', removeTask);
 app.get('/addTask', addTask);
 app.get('/viewInterval', viewInterval);

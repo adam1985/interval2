@@ -13,14 +13,18 @@
                 <ul class="cl">
                     <li>
                         <label>用户：</label>
-                        <select id="user-select" class="platform-select" name="platform">
-
+                        <select id="user-select" class="user-select" name="platform">
+                            <% userlists.forEach(function(v) {  %>
+                                <option value="<%= v %>" ><%= v %></option>
+                            <% }) %>
                         </select>
                     </li>
                     <li>
                         <label>公众平台：</label>
                         <select id="platform-select" class="platform-select" name="platform">
-
+                            <% plat_lists.forEach(function(v) {  %>
+                                <option value="<%= v %>" ><%= v %></option>
+                            <% }) %>
                         </select>
                     </li>
                     <li>
@@ -121,6 +125,13 @@
             </tr>
         {{ }) }}
     </script>
+
+  <script type="text/html" id="plat_list_template">
+      {{ plat_lists.forEach(function(v) {  }}
+        <option value="{{= v }}" >{{= v }}</option>
+      {{ }) }}
+  </script>
+
   <script src="/assets/require.min.js" data-main="/assets/src/index"></script>
   </body>
 </html>

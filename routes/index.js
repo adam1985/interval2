@@ -6,35 +6,29 @@ var rootPath = process.cwd(),
     ng = require('nodegrass'),
     querystring = require("querystring"),
     fs = require('fs'),
-    userConf = require('../config/userConf'),
-    taskListPath = rootPath + '/public/loger/tasklist.txt',
-    tools = require('../module/tools'),
-    getList = require('./getList');
+    tools = require('../module/tools');
 
 exports.index = function(req, res){
     if( req.query.airen != 'yuanyuan') {
         res.send(403, 'forbidden!');
     }
 
-    var platform_lists = [];
-    tools.each(userConf, function(key, val){
-        if( key != 'website'){
-            platform_lists.push( val );
-        }
-    });
+    var userlists =tools.getAllUser() || [],
+        curUsername = userlists[0],
+        plat_lists =  [],
+        taskList = [];
 
-    taskList = [];
-    if( fs.existsSync(taskListPath) ) {
-        taskList = JSON.parse(fs.readFileSync(taskListPath).toString());
+    if( curUsername ){
+        plat_lists = tools.getAllPlat( curUsername ) || [];
+        taskList = tools.getAllInterval( curUsername ) || [];
     }
-
 
     res.render('index', {
         title: '微信公众平台定时发布文章',
-        platform_lists : platform_lists,
-        fsend_lists : [],
-        taskList : taskList
+        userlists : userlists,
+        plat_lists : plat_lists,
+        taskList : taskList,
+        fsend_lists : []
     });
-
 
 };

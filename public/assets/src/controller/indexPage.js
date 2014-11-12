@@ -3,23 +3,56 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
         return function(){
 
             var getFsendList = function( platform_name, cb){
-                $.ajax({
-                    url : '/getSeqList',
+                    ajax({
+                        url : '/getSeqList',
+                        type : 'get',
+                        dataType : 'json',
+                        data : {
+                            platform_name : platform_name
+                        },
+                        success : function( res ){
+                            if( res.success ) {
+                                $('#fsend-select').html( template.render('fsend-template', {
+                                    fsend_lists : res.data
+                                }));
+                                cb && cb();
+                            }
+                        }
+                    });
+                };
+
+            $(document).on('change', '.user-select', function(){
+                var platform_name = $('#platform-select').val(),
+                    runMode = $('#run-mode').val();
+
+                if( runMode == 1) {
+                    getFsendList(platform_name);
+                }
+
+                ajax({
+                    url : '/getPlatInfo',
                     type : 'get',
                     dataType : 'json',
                     data : {
-                        platform_name : platform_name
+                        username : this.value
                     },
                     success : function( res ){
                         if( res.success ) {
-                            $('#fsend-select').html( template.render('fsend-template', {
-                                fsend_lists : res.data
+                            $('#platform-select').html( template.render('plat_list_template', {
+                                plat_lists : res.data.plat_lists
                             }));
-                            cb && cb();
+
+                            $('#task-list').html( template.render('tasklist-template', {
+                                taskList : res.data.taskList
+                            }));
+
                         }
                     }
                 });
-            };
+
+
+            });
+
 
             $(document).on('change', '.platform-select', function(){
                 var platform_name = this.value;
@@ -72,7 +105,7 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
                 var serializeArray = $('#interval-form').serializeArray(),
                     fsendSelect = $('#fsend-select')[0];
                 if( !$(fsendSelect).attr('disabled') ) {
-                    var selectText = fsendSelect.options[fsendSelect.selectedIndex].text
+                    var selectText = fsendSelect.options[fsendSelect.selectedIndex].text;
                     serializeArray.push({
                         name : "title",
                         value : selectText

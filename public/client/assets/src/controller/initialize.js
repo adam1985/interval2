@@ -70,7 +70,7 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
                     $(document).on('click', '.remove-platform', function(){
                         var $this = $(this),
                             tr = $this.closest('tr'),
-                            username = $this.attr('data-username');
+                            plat_name = $this.attr('data-plat-name');
 
                         if( confirm('是否真要删除公众平台？') ) {
                             ajax({
@@ -79,7 +79,7 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
                                 url : host + '/removePlatform',
                                 data : {
                                     token : interval_token,
-                                    username : username
+                                    plat_name : plat_name
                                 },
                                 success: function( res ){
                                     alert( res.msg );
