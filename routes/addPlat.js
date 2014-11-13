@@ -1,8 +1,8 @@
 var tools = require('../module/tools');
 
 module.exports = function(req, res){
-    res.render('addpage', {
-        title: '添加用户'
+    res.render('addPlat', {
+        title: '添加公众平台'
     });
 
 };

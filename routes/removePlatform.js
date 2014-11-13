@@ -4,9 +4,20 @@ module.exports = function(req, res){
 	var callback = req.query.cb,
         token = req.query.token,
         plat_name = req.query.plat_name,
+        username = req.query.username,
         userlist = tools.getUserlist(),
-        userStatus = tools.getUserName( userlist, token),
-        user = userStatus.username;
+        user,
+        userStatus = {
+            has : false
+        };
+
+        if( username ) {
+            user = username;
+            userStatus.has = !!userlist[username];
+        } else {
+            userStatus = tools.getUserName( userlist, token),
+            user = userStatus.username;
+        }
 
     if( userStatus.has ){
         if( tools.removeUserlist( {

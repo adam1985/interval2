@@ -15,12 +15,15 @@ var express = require('express')
 
   , addpage = require('./routes/addpage')
   , adduser = require('./routes/adduser')
+  , addPlat = require('./routes/addPlat')
   , removeuser = require('./routes/removeuser')
   , userlist = require('./routes/userlist')
 
   , addPlatform = require('./routes/addPlatform')
   , removePlatform = require('./routes/removePlatform')
-  , platformlist = require('./routes/platformlist');
+  , platformlist = require('./routes/platformlist')
+
+  , download = require('./routes/download');
 
 global.taskObj = {};
 global.dailyObj = {};
@@ -51,11 +54,13 @@ app.get('/addTask', addTask);
 app.get('/viewInterval', viewInterval);
 app.get('/addpage', addpage);
 app.get('/adduser', adduser);
+app.get('/addPlat', addPlat);
 app.get('/removeuser', removeuser);
 app.get('/userlist', userlist);
 app.get('/addPlatform', addPlatform);
 app.get('/removePlatform', removePlatform);
 app.get('/platformlist', platformlist);
+app.get('/download', download);
 
 
 http.createServer(app).listen(app.get('port'), function(){

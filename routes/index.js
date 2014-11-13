@@ -23,6 +23,8 @@ exports.index = function(req, res){
         taskList = tools.getAllInterval( curUsername ) || [];
     }
 
+    console.log(taskList);
+
     res.render('index', {
         title: '微信公众平台定时发布文章',
         userlists : userlists,

@@ -121,6 +121,8 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
                             $('#task-list').append( template.render('tasklist-template', {
                                 taskList : res.data
                             }));
+                        } else {
+                            alert( res.msg );
                         }
                     }
                 });
@@ -130,20 +132,28 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
             $(document).on('click', '.remove-interval', function(){
                 var $this = $(this),
                     taskindex = $this.attr('data-task-index'),
+                    username =  $this.attr('data-username'),
+                    plat_name = $this.attr('data-platform'),
+                    mode = $this.attr('data-mode'),
                     tr = $this.closest('tr');
-                ajax({
-                    url : '/removeTask',
-                    type : 'get',
-                    dataType : 'json',
-                    data : {
-                        taskindex : taskindex
-                    },
-                    success : function( res ){
-                        if( res.success ) {
-                            tr.remove();
+                if( confirm('是否真要删除该定时任务？') ) {
+                    ajax({
+                        url: '/removeTask',
+                        type: 'get',
+                        dataType: 'json',
+                        data: {
+                            taskindex: taskindex,
+                            username: username,
+                            plat_name: plat_name,
+                            mode: mode
+                        },
+                        success: function (res) {
+                            if (res.success) {
+                                tr.remove();
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
             });
 

@@ -3,18 +3,28 @@ var tools = require('../module/tools');
 module.exports = function(req, res){
 	var callback = req.query.cb,
         token = req.query.token,
+        user = req.query.user,
         name = req.query.name,
         username = req.query.user_name,
         pwd = req.query.pwd,
         userlist = tools.getUserlist(),
-        userStatus = tools.getUserName( userlist, token);
+        userStatus = {
+            has : false
+        };
+        if( token ){
+            userStatus = tools.getUserName( userlist, token);
+            user = userStatus.username;
+        } else {
+            userStatus.has = !!userlist[user];
+        }
+
 
     if( userStatus.has ){
-        var plat_a = tools.getCounts( userStatus.username ).plat,
-            info = userlist[userStatus.username].info || {};
+        var plat_a = tools.getCounts( user ).plat,
+            info = userlist[user].info || {};
 
         if( info.platform_a > plat_a ) {
-            if( tools.hasPlatform( userStatus.username, name ) ) {
+            if( tools.hasPlatform( user, name ) ) {
                 tools.interfaceDone( res, {
                     success : false,
                     msg : "该公众平台已添加过，不要重复添加!"
@@ -22,7 +32,7 @@ module.exports = function(req, res){
 
             } else {
                 if( tools.addUserlist({
-                    user : userStatus.username,
+                    user : user,
                     data : {
                         name : name,
                         username : username,

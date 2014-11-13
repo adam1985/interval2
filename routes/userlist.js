@@ -1,8 +1,14 @@
 var tools = require('../module/tools');
 
 module.exports = function(req, res){
-	var callback = req.query.cb;
+	var userlist = tools.getUserlist(), user_list = [];
+    tools.each( userlist, function(key, val){
+        user_list.push( val );
+    });
 
-    res.send(404);
+    res.render('userlist', {
+        title: '用户列表',
+        userlist : user_list
+    });
 
 };

@@ -5,7 +5,7 @@ module.exports = function(req, res){
 
 	tools.interfaceDone(res, {
         success : true,
-        data : Object.keys(taskObj)
+        data : JSON.stringify(taskObj)
     }, callback);
 
 

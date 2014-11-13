@@ -4,7 +4,7 @@ var fs = require('fs'),
     startMass = require("./startMass");
 
 module.exports = function( query ){
-    var mode = query.mode,
+    var mode = +query.mode,
         username = query.username,
         platform = query.platform,
         time = query.time,
@@ -87,17 +87,16 @@ module.exports = function( query ){
 
     taskObj[username] = taskObj[username] || {};
 
-    if( mode == 0 ) {
-        taskObj[username].multi = taskObj[username].multi || {};
-        taskObj[username].multi[task_index] = task;
-    } else if( mode == 1) {
-        taskObj[username].single = taskObj[username].multi || {};
-        taskObj[username].single[task_index] = task;
-    }
+    taskObj[username][platform] = taskObj[username][platform] || {};
+
+    taskObj[username][platform][mode] = taskObj[username][platform][mode] || {};
+
+    taskObj[username][platform][mode][task_index] = task;
 
     var taskData = {
         taskIndex : task_index,
         mode : mode,
+        username : username,
         platform : platform,
         time : time,
         app_id : app_id || null,

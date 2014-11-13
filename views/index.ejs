@@ -8,95 +8,100 @@
   </head>
   <body>
 	<div class="wrapper" id="index-page">
-		<div class="interval-header">
-            <form id="interval-form">
-                <ul class="cl">
-                    <li>
-                        <label>用户：</label>
-                        <select id="user-select" class="user-select" name="platform">
-                            <% userlists.forEach(function(v) {  %>
-                                <option value="<%= v %>" ><%= v %></option>
-                            <% }) %>
-                        </select>
-                    </li>
-                    <li>
-                        <label>公众平台：</label>
-                        <select id="platform-select" class="platform-select" name="platform">
-                            <% plat_lists.forEach(function(v) {  %>
-                                <option value="<%= v %>" ><%= v %></option>
-                            <% }) %>
-                        </select>
-                    </li>
-                    <li>
-                        <label>执行方式：</label>
-                        <select id="run-mode" class="run-mode" name="mode">
-                            <option selected="selected" value="0">重复执行</option>
-                            <option value="1">执行一次</option>
-                        </select>
-                    </li>
-                    <li>
-                        <label>时间设定：</label>
-                        <input name="time" class="datepicker time" id="datepicker" type="text" value="" />
-                    </li>
-                    <li>
-                        <input id="add-interval" class="add-interval" type="button" value="添加定时任务" />
-                    </li>
-                    <li>
-                        <input id="view-interval" class="view-interval" type="button" value="查看定时任务" />
-                    </li>
-                </ul>
-                <ul class="cl hide fsend-box" id="fsend-box">
-                    <li>
-                        <label>群发文章：</label>
-                        <select id="fsend-select" class="fsend-select" name="app_id" disabled="disabled">
-                            <% fsend_lists.forEach(function(v) {  %>
-                                <option value="<%= v.app_id %>" title="<%= v.app_id %>"><%= v.title %></option>
-                            <% }) %>
-                        </select>
-                    </li>
-                </ul>
-            </form>
-            <div id="loading" class="loading hide">
-                正在操作中，请稍后...
+        <%- include nav %>
+        <div class="fl page-wrap">
+            <div class="interval-header">
+                <form id="interval-form">
+                    <ul class="cl">
+                        <li>
+                            <label>用户：</label>
+                            <select id="user-select" class="user-select" name="username">
+                                <% userlists.forEach(function(v) {  %>
+                                    <option value="<%= v %>" ><%= v %></option>
+                                <% }) %>
+                            </select>
+                        </li>
+                        <li>
+                            <label>公众平台：</label>
+                            <select id="platform-select" class="platform-select" name="platform">
+                                <% plat_lists.forEach(function(v) {  %>
+                                    <option value="<%= v %>" ><%= v %></option>
+                                <% }) %>
+                            </select>
+                        </li>
+                        <li>
+                            <label>执行方式：</label>
+                            <select id="run-mode" class="run-mode" name="mode">
+                                <option selected="selected" value="0">重复执行</option>
+                                <option value="1">执行一次</option>
+                            </select>
+                        </li>
+                        <li>
+                            <label>时间设定：</label>
+                            <input name="time" class="datepicker time" id="datepicker" type="text" value="" />
+                        </li>
+                        <li>
+                            <input id="add-interval" class="add-interval" type="button" value="添加定时任务" />
+                        </li>
+                        <li>
+                            <input id="start-all-interval" class="start-all-interval" type="button" value="重新所有定时任务" />
+                        </li>
+                    </ul>
+                    <ul class="cl hide fsend-box" id="fsend-box">
+                        <li>
+                            <label>群发文章：</label>
+                            <select id="fsend-select" class="fsend-select" name="app_id" disabled="disabled">
+                                <% fsend_lists.forEach(function(v) {  %>
+                                    <option value="<%= v.app_id %>" title="<%= v.app_id %>"><%= v.title %></option>
+                                <% }) %>
+                            </select>
+                        </li>
+                    </ul>
+                </form>
+                <div id="loading" class="loading hide">
+                    正在操作中，请稍后...
+                </div>
             </div>
-		</div>
-        <div class="interval-body">
-            <div class="interval-list">
-                   <table>
-                       <thead>
-                           <tr>
-                               <th>任务ID</th>
-                               <th>平台</th>
-                               <th>标题</th>
-                               <th>app_id</th>
-                               <th>执行方式</th>
-                               <th>启动时间</th>
-                               <th>上次执行时间</th>
-                               <th>执行结果</th>
-                               <th>执行次数</th>
-                               <td>操作</td>
-                           </tr>
-                       </thead>
-                       <tbody id="task-list">
-                            <% modeText = ["重复执行", "执行一次"]; %>
-                            <% taskList.forEach(function(v){ %>
-                                <tr>
-                                    <td><%= v.taskIndex %></td>
-                                    <td><%= v.platform %></td>
-                                    <td><%= v.title || '空' %></td>
-                                    <td><%= v.app_id || '空' %></td>
-                                    <td><%= modeText[+v.mode] %></td>
-                                    <td><%= v.time %></td>
-                                    <td><%= v.prevTime || '空'  %></td>
-                                    <td><%= v.successStatus || 0 %></td>
-                                    <td><%= v.excuteNum || 0 %></td>
-                                    <td>
-                                        <input data-task-index="<%= v.taskIndex %>" class="remove-interval" type="button" value="删除定时任务" />
-                                    </td>
-                                </tr>
-                            <% }) %>
-                       </tbody>
-                   </table>
+            <div class="interval-body">
+                <div class="interval-list">
+                       <table>
+                           <thead>
+                               <tr>
+                                   <th>任务ID</th>
+                                   <th>用户名</th>
+                                   <th>平台</th>
+                                   <th>标题</th>
+                                   <th>app_id</th>
+                                   <th>执行方式</th>
+                                   <th>启动时间</th>
+                                   <th>上次执行时间</th>
+                                   <th>执行结果</th>
+                                   <th>执行次数</th>
+                                   <th>操作</th>
+                               </tr>
+                           </thead>
+                           <tbody id="task-list">
+                                <% modeText = ["重复执行", "执行一次"]; %>
+                                <% taskList.forEach(function(v){ %>
+                                    <tr>
+                                        <td><%= v.taskIndex %></td>
+                                        <td><%= v.username %></td>
+                                        <td><%= v.platform %></td>
+                                        <td><%= v.title || '空' %></td>
+                                        <td><%= v.app_id || '空' %></td>
+                                        <td><%= modeText[+v.mode] %></td>
+                                        <td><%= v.time %></td>
+                                        <td><%= v.prevTime || '空'  %></td>
+                                        <td><%= v.successStatus || 0 %></td>
+                                        <td><%= v.excuteNum || 0 %></td>
+                                        <td>
+                                            <input data-username="<%= v.username %>" data-platform="<%= v.platform %>" data-mode="<%= v.mode %>" data-task-index="<%= v.taskIndex %>" class="remove-interval" type="button" value="删除定时任务" />
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                           </tbody>
+                       </table>
+                </div>
             </div>
         </div>
     </div>
@@ -111,6 +116,7 @@
         {{ taskList.forEach(function(v) {  }}
             <tr>
                 <td>{{= v.taskIndex }}</td>
+                <td>{{= v.username }}</td>
                 <td>{{= v.platform }}</td>
                 <td>{{= v.title || '空' }}</td>
                 <td>{{= v.app_id || '空' }}</td>
@@ -120,7 +126,7 @@
                 <td>{{= v.successStatus || 0 }}</td>
                 <td>{{= v.excuteNum || 0 }}</td>
                 <td>
-                    <input data-task-index="{{= v.taskIndex }}" class="remove-interval" type="button" value="删除定时任务" />
+                    <input data-username="{{= v.username }}" data-platform="{{= v.platform }}" data-mode="{{= v.mode }}" data-task-index="{{= v.taskIndex }}" class="remove-interval" type="button" value="删除定时任务" />
                 </td>
             </tr>
         {{ }) }}

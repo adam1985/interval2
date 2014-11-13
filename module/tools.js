@@ -195,6 +195,37 @@ tools_.hasPlatform = function(username, name ){
     return _hasPlatform;
 };
 
+tools_.cancelInterval = function( intervals ){
+    (function(intervals){
+        var arg = arguments;
+        tools_.each(intervals, function(key, val){
+            if( val.cancel ) {
+                val.cancel();
+            } else {
+                arg.callee(val);
+            }
+        });
+    }(intervals));
+
+};
+
+tools_.delInterval = function( config, type ) {
+
+    if( type == 'user' ) {
+        tools_.cancelInterval(taskObj[config.user]);
+        delete taskObj[config.user];
+    } else if( type == 'platform' ) {
+        tools_.cancelInterval(taskObj[config.user][config.plat_name]);
+        delete taskObj[config.user][config.plat_name];
+    } else if( type == 'mode' ) {
+        tools_.cancelInterval(taskObj[config.user][config.plat_name][config.mode]);
+        delete taskObj[config.user][config.plat_name][config.mode];
+    } else if( type == 'interval' ){
+        taskObj[config.user][config.plat_name][config.mode][config.taskIndex].cancel();
+        delete taskObj[config.user][config.plat_name][config.mode][config.taskIndex];
+    }
+};
+
 tools_.removeUserlist = function( config, type ){
     var userlist = tools_.getUserlist(),
         copyUserlist = Object.create(userlist),
@@ -206,6 +237,7 @@ tools_.removeUserlist = function( config, type ){
     if( type == 'user' ) {
         if( curUser ) {
             removeable = true;
+            tools_.delInterval({user : config.user});
             delete userlist[config.user];
         }
 
@@ -214,6 +246,7 @@ tools_.removeUserlist = function( config, type ){
             tools_.each(plat_lists, function(i, v){
                 if( v.plat_info.name == config.plat_name ){
                     removeable = true;
+                    tools_.delInterval({user : config.user, plat_name : config.plat_name});
                     userlist[config.user].platform.splice(i, 1);
                     return false;
                 }
@@ -222,6 +255,7 @@ tools_.removeUserlist = function( config, type ){
 
     } else if( type == 'interval' ){
         if( plat_lists.length >>> 0 ) {
+
             tools_.each(plat_lists, function(i, v){
                 if( v.plat_info.name == config.plat_name ){
                    var interval_list = v.interval_list;
@@ -229,7 +263,13 @@ tools_.removeUserlist = function( config, type ){
                         tools_.each(interval_list, function(index, val){
                             if( val.taskIndex == config.taskIndex ){
                                 removeable = true;
-                                userlist[config.user].platform[index].interval_list.splice(i, 1);
+                                userlist[config.user].platform[i].interval_list.splice(index, 1);
+                                tools_.delInterval({
+                                    user : config.user,
+                                    plat_name : config.plat_name,
+                                    mode : config.mode,
+                                    taskIndex : config.taskIndex
+                                });
                                 return false;
                             }
                         });
@@ -285,10 +325,12 @@ tools_.addUserlist = function( config, type ) {
         if( curUser ) {
             plat_lists = curUser.platform || [];
             if( plat_lists.length >>> 0 ) {
+
                 tools_.each(plat_lists, function(i, v){
                     if( v.plat_info.name == config.plat_name ){
                         addable = true;
                         var interval_list = v.interval_list || [];
+
                         interval_list.push( config.data );
                         userlist[config.user].platform[i].interval_list = interval_list;
                         return false;
@@ -323,9 +365,9 @@ tools_.getCounts = function( username ) {
                     var interval_lists = v.interval_list || [];
                     counts.inter += interval_lists.length;
                     tools_.each(interval_lists, function(index, val){
-                        if( v.mode == 0 ) {
+                        if( val.mode == 0 ) {
                             counts.multi++;
-                        } else if(v.mode == 1){
+                        } else if(val.mode == 1){
                             counts.single++;
                         }
                     });
@@ -374,15 +416,16 @@ tools_.getAllInterval = function( username ) {
     if( curUser ) {
         plat_list = curUser.platform || [];
     }
+
     tools_.each(plat_list, function(i, val){
         var interval_list = val.interval_list || [];
-        allInterval.concat( interval_list );
+        allInterval = allInterval.concat( interval_list );
     });
 
     return allInterval;
 };
 
-tools.updateInterval = function( username, plat_name, taskindex , cb){
+tools_.updateInterval = function( username, plat_name, taskindex , cb){
     var userlist = tools_.getUserlist(),
         curUser = userlist[username],
         plat_list = [],

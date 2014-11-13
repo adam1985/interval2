@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <link rel='stylesheet' href='/assets/styles/style.css' />
+</head>
+<body>
+<div class="wrapper" id="add-plat">
+    <%- include nav %>
+    <div class="fl page-wrap">
+        <form id="platform-form">
+            <ul class="input-list">
+                <li>
+                    <label class="label">用户：</label>
+                    <input name="user" id="user" type="text" datatype="*" value="" />
+                </li>
+                <li>
+                    <label class="label">平台名称：</label>
+                    <input name="name" type="text" datatype="*" value="" />
+                </li>
+                <li>
+                    <label class="label">用户名：</label>
+                    <input name="user_name" type="text" datatype="*" value="" />
+                </li>
+                <li>
+                    <label class="label">密码：</label>
+                    <input name="pwd" type="password" datatype="*" value="" />
+                </li>
+                <li>
+                    <input class="post_btn" type="button" id="add-platform" value="添加公众平台" />
+                    <span id="err-tiper" class="err-tiper"></span>
+                </li>
+            </ul>
+        </form>
+    </div>
+</div>
+<script src="/assets/require.min.js" data-main="/assets/src/index"></script>
+</body>
+</html>
