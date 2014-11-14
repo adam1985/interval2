@@ -41,12 +41,20 @@ li{ list-style: none;}
 #Validform_msg a.Validform_close:hover{color:#cc0;}
 #Validform_msg .Validform_info{padding:8px;border:1px solid #000; border-top:none; text-align:left;}
 
-.wrapper{ width : 1000px; margin : 20px auto;}
-.page-nav{ padding-right: 50px; border-right: 1px solid #ccc; height: 600px;}
-.page-nav li{ margin: 10px 0 20px;}
+.wrapper{margin : 20px;}
+.page-nav{ border-bottom: 1px solid #ccc; padding-bottom: 20px; margin-bottom: 20px;}
+.page-nav li{ margin: 0 20px 0 0; float: left;}
 .page-nav li a{ color: #333; text-decoration: none;}
 .page-nav li a:hover{ color: #f00; text-decoration: underline;}
-.page-wrap{ width: 750px; margin-left: 50px;}
+.page-wrap{}
+.interval-header { padding:0 0 10px;border-bottom: 1px solid #ccc;  }
+.interval-header ul{margin-bottom: 15px;}
+.interval-header li{ float: left; margin-right: 20px;}
+.interval-header li label{margin-right: 3px;}
+.interval-header input{ height: 30px; padding-left: 3px;}
+.interval-header select{ height: 30px; width: 100px;}
+.interval-header select.fsend-select{ width: 463px;}
+.add-interval,.view-interval,.start-all-interval{ cursor: pointer;}
 .add-interval,.view-interval{ cursor: pointer;}
 .interval-body{ margin-top: 20px;}
 .loading{ width: 250px; height: 40px; border-radius: 5px; text-align: center; line-height: 40px; background: #eee; position: absolute; left: 50%; top: 50%; margin: -20px 0 0 -100px;}

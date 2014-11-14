@@ -196,34 +196,43 @@ tools_.hasPlatform = function(username, name ){
 };
 
 tools_.cancelInterval = function( intervals ){
-    (function(intervals){
-        var arg = arguments;
-        tools_.each(intervals, function(key, val){
-            if( val.cancel ) {
-                val.cancel();
+        (function(intervals){
+            var arg = arguments;
+            if( intervals.cancel ) {
+                intervals.cancel();
             } else {
-                arg.callee(val);
+                tools_.each(intervals, function(key, val){
+                    if( !val ){
+                        return false;
+                    }
+                    if( val.cancel ) {
+                        val.cancel();
+                    } else {
+                        arg.callee(val);
+                    }
+                });
             }
-        });
-    }(intervals));
 
+        }(intervals));
 };
 
 tools_.delInterval = function( config, type ) {
+    try{
+        if( type == 'user' ) {
+            tools_.cancelInterval(taskObj[config.user]);
+            delete taskObj[config.user];
+        } else if( type == 'platform' ) {
+            tools_.cancelInterval(taskObj[config.user][config.plat_name]);
+            delete taskObj[config.user][config.plat_name];
+        } else if( type == 'mode' ) {
+            tools_.cancelInterval(taskObj[config.user][config.plat_name][config.mode]);
+            delete taskObj[config.user][config.plat_name][config.mode];
+        } else if( type == 'interval' ){
+            tools_.cancelInterval(taskObj[config.user][config.plat_name][config.mode][config.taskIndex]);
+            delete taskObj[config.user][config.plat_name][config.mode][config.taskIndex];
+        }
+    }catch (e){}
 
-    if( type == 'user' ) {
-        tools_.cancelInterval(taskObj[config.user]);
-        delete taskObj[config.user];
-    } else if( type == 'platform' ) {
-        tools_.cancelInterval(taskObj[config.user][config.plat_name]);
-        delete taskObj[config.user][config.plat_name];
-    } else if( type == 'mode' ) {
-        tools_.cancelInterval(taskObj[config.user][config.plat_name][config.mode]);
-        delete taskObj[config.user][config.plat_name][config.mode];
-    } else if( type == 'interval' ){
-        taskObj[config.user][config.plat_name][config.mode][config.taskIndex].cancel();
-        delete taskObj[config.user][config.plat_name][config.mode][config.taskIndex];
-    }
 };
 
 tools_.removeUserlist = function( config, type ){
@@ -237,7 +246,7 @@ tools_.removeUserlist = function( config, type ){
     if( type == 'user' ) {
         if( curUser ) {
             removeable = true;
-            tools_.delInterval({user : config.user});
+            tools_.delInterval({user : config.user}, type);
             delete userlist[config.user];
         }
 
@@ -246,7 +255,7 @@ tools_.removeUserlist = function( config, type ){
             tools_.each(plat_lists, function(i, v){
                 if( v.plat_info.name == config.plat_name ){
                     removeable = true;
-                    tools_.delInterval({user : config.user, plat_name : config.plat_name});
+                    tools_.delInterval({user : config.user, plat_name : config.plat_name}, type);
                     userlist[config.user].platform.splice(i, 1);
                     return false;
                 }
@@ -269,7 +278,7 @@ tools_.removeUserlist = function( config, type ){
                                     plat_name : config.plat_name,
                                     mode : config.mode,
                                     taskIndex : config.taskIndex
-                                });
+                                }, type);
                                 return false;
                             }
                         });
@@ -400,10 +409,22 @@ tools_.getAllPlat = function( username ) {
         plat_list = curUser.platform || [];
     }
     tools_.each(plat_list, function(i, val){
-        allPlat.push( val.plat_info.name );
+        allPlat.push( val.plat_info );
     });
 
     return allPlat;
+};
+
+tools_.getPlat = function( username, plat_name){
+    var allPlat = tools_.getAllPlat( username), plat_;
+    tools_.each(allPlat, function(i, v){
+        if(v.name == plat_name){
+            plat_ = v;
+            return false;
+        }
+    });
+
+    return plat_;
 
 };
 
@@ -447,6 +468,26 @@ tools_.updateInterval = function( username, plat_name, taskindex , cb){
     });
 
     return allInterval;
+};
+
+tools_.hasInterval = function( taskIndex ){
+    var arg = arguments, _hasInterval = false;
+    tools_.each(taskObj, function(key, val){
+        if( !val ){
+            return false;
+        }
+
+        if( val.cancel ){
+            if( key == taskIndex ) {
+                _hasInterval = true;
+                return false;
+            }
+        } else {
+            arg.callee( val );
+        }
+    });
+
+    return _hasInterval;
 };
 
 module.exports = tools_;

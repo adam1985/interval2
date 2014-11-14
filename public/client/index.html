@@ -1,69 +1,116 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
+<head>
+    <title>微信定时发布系统</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="content-type" content="text/html;charset=utf-8">
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-	<script src="/javascripts/jquery-2.1.1.min.js"></script>
-    <script src="/javascripts/template.js"></script>
-    <script src="/javascripts/My97DatePicker/WdatePicker.js"></script>
-  </head>
-  <body>
-	<div class="wrapper">
-		<div class="addpage-header">
-            <form id="addpage-form" action="/adduser" method="get">
-                <ul class="input-list">
+    <link rel='stylesheet' href='assets/styles/layout.css' />
+</head>
+<body>
+<div class="cl wrapper" id="index-page">
+    <div class="page-nav">
+        <ul class="cl">
+            <li><a href="index.html">设置定时器</a> </li>
+            <li><a href="add.html">添加公众平台</a> </li>
+            <li><a href="list.html">管理公众平台</a> </li>
+        </ul>
+    </div>
+    <div class="page-wrap">
+        <div class="interval-header">
+            <form id="interval-form">
+                <ul class="cl">
                     <li>
-                        <label>用户名：</label>
-                        <input name="user_name" type="text" value="" />
+                        <label>公众平台：</label>
+                        <select id="platform-select" class="platform-select" name="platform">
+
+                        </select>
                     </li>
                     <li>
-                        <label>QQ：</label>
-                        <input name="qq" type="text" value="" />
+                        <label>执行方式：</label>
+                        <select id="run-mode" class="run-mode" name="mode">
+                            <option selected="selected" value="0">重复执行</option>
+                            <option value="1">执行一次</option>
+                        </select>
                     </li>
                     <li>
-                        <label>手机：</label>
-                        <input name="phone" type="text" value="" />
+                        <label>时间设定：</label>
+                        <input placeholder="点击设置时间" name="time" class="datepicker time" id="datepicker" type="text" value="" />
                     </li>
                     <li>
-                        <label>微信：</label>
-                        <input name="weixin" type="text" value="" />
+                        <input id="add-interval" class="add-interval" type="button" value="添加定时任务" />
                     </li>
+                </ul>
+                <ul class="cl hide fsend-box" id="fsend-box">
                     <li>
-                        <label>重复执行数量：</label>
-                        <input name="multiple" type="text" value="2" />
-                    </li>
-                    <li>
-                        <label>单次执行数量：</label>
-                        <input name="single" type="text" value="10" />
-                    </li>
-                    <li>
-                        <label>平台数量：</label>
-                        <input name="platform" type="text" value="" />
-                    </li>
-                    <li>
-                        <label>过期时间：</label>
-                        <input name="expiry" class="datepicker time" id="datepicker" type="text" value="" />
-                    </li>
-                    <li>
-                        <input id="add-user" class="add-user" type="submit" value="添加用户" />
+                        <label>群发文章：</label>
+                        <select id="fsend-select" class="fsend-select" name="app_id" disabled="disabled">
+
+                        </select>
                     </li>
                 </ul>
             </form>
-		</div>
 
-  </div>
-  <script>
+        </div>
+        <div class="interval-body">
+            <div class="interval-list">
+                <table class="interval-table">
+                    <thead>
+                    <tr>
+                        <th>任务ID</th>
+                        <th>用户名</th>
+                        <th>平台</th>
+                        <th>标题</th>
+                        <th>app_id</th>
+                        <th>执行方式</th>
+                        <th>启动时间</th>
+                        <th>上次执行时间</th>
+                        <th>执行结果</th>
+                        <th>执行次数</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="task-list">
 
-      $(document).on('click', '.datepicker', function(){
-          WdatePicker({
-              el : 'datepicker',
-              skin:'twoer',
-              dateFmt:'yyyy-MM-dd'
-          });
-      });
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
-  </script>
-  </body>
+<script type="text/html" id="fsend-template">
+    {{ fsend_lists.forEach(function(v) {  }}
+    <option value="{{= v.app_id }}" title="{{= v.app_id }}">{{= v.title }}</option>
+    {{ }) }}
+</script>
+
+<script type="text/html" id="tasklist-template">
+    {{ modeText = ["重复执行", "执行一次"]; }}
+    {{ taskList.forEach(function(v) {  }}
+    <tr>
+        <td>{{= v.taskIndex }}</td>
+        <td>{{= v.username }}</td>
+        <td>{{= v.platform }}</td>
+        <td>{{= v.title || '空' }}</td>
+        <td>{{= v.app_id || '空' }}</td>
+        <td>{{= modeText[+v.mode] }}</td>
+        <td>{{= v.time }}</td>
+        <td>{{= v.prevTime || '空'  }}</td>
+        <td>{{= v.successStatus || 0 }}</td>
+        <td>{{= v.excuteNum || 0 }}</td>
+        <td>
+            <input data-username="{{= v.username }}" data-platform="{{= v.platform }}" data-mode="{{= v.mode }}" data-task-index="{{= v.taskIndex }}" class="remove-interval" type="button" value="删除定时任务" />
+        </td>
+    </tr>
+    {{ }) }}
+</script>
+
+<script type="text/html" id="plat_list_template">
+    {{ plat_lists.forEach(function(v) {  }}
+        <option value="{{= v.name }}" >{{= v.name }}</option>
+    {{ }) }}
+</script>
+
+<script src="assets/require.min.js" data-main="assets/src/index"></script>
+</body>
 </html>

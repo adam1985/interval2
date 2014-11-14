@@ -9,7 +9,7 @@
   <body>
 	<div class="wrapper" id="index-page">
         <%- include nav %>
-        <div class="fl page-wrap">
+        <div class="page-wrap">
             <div class="interval-header">
                 <form id="interval-form">
                     <ul class="cl">
@@ -25,7 +25,7 @@
                             <label>公众平台：</label>
                             <select id="platform-select" class="platform-select" name="platform">
                                 <% plat_lists.forEach(function(v) {  %>
-                                    <option value="<%= v %>" ><%= v %></option>
+                                    <option value="<%= v.name %>" ><%= v.name %></option>
                                 <% }) %>
                             </select>
                         </li>
@@ -64,7 +64,7 @@
             </div>
             <div class="interval-body">
                 <div class="interval-list">
-                       <table>
+                       <table class="interval-table">
                            <thead>
                                <tr>
                                    <th>任务ID</th>
@@ -134,7 +134,7 @@
 
   <script type="text/html" id="plat_list_template">
       {{ plat_lists.forEach(function(v) {  }}
-        <option value="{{= v }}" >{{= v }}</option>
+        <option value="{{= v.name }}" >{{= v.name }}</option>
       {{ }) }}
   </script>
 

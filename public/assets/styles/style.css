@@ -1,4 +1,4 @@
-*{padding:0;margin:0;}
+*{padding:0;margin:0; font-size: 14px;}
 a {
   color: #00B7FF;
 }
@@ -41,12 +41,12 @@ li{ list-style: none;}
 #Validform_msg .Validform_info{padding:8px;border:1px solid #000; border-top:none; text-align:left;}
 
 .wrapper{margin : 20px;}
-.page-nav{ padding-right: 50px; border-right: 1px solid #ccc; height: 600px;}
-.page-nav li{ margin: 10px 0 20px;}
+.page-nav{ border-bottom: 1px solid #ccc; padding-bottom: 20px; }
+.page-nav li{ margin: 0 20px 0 0; float: left;}
 .page-nav li a{ color: #333; text-decoration: none;}
 .page-nav li a:hover{ color: #f00; text-decoration: underline;}
-.page-wrap{ margin-left: 50px;}
-
+.page-wrap{ margin-top: 30px;}
+.interval-header { padding:0 0 10px;border-bottom: 1px solid #ccc;  }
 .interval-header ul{margin-bottom: 15px;}
 .interval-header li{ float: left; margin-right: 20px;}
 .interval-header li label{margin-right: 3px;}
@@ -57,9 +57,10 @@ li{ list-style: none;}
 .interval-body{ margin-top: 20px;}
 .loading{ width: 250px; height: 40px; border-radius: 5px; text-align: center; line-height: 40px; background: #eee; position: absolute; left: 50%; top: 50%; margin: -20px 0 0 -100px;}
 
+.interval-table{}
 .interval-list table{width: 100%;}
 .interval-list table td,.interval-list table th{ text-align: left;}
-.interval-list table td { height: 35px;}
+.interval-list table td { height: 35px; padding-right: 10px;}
 .interval-list table input{ height: 25px;cursor: pointer;}
 .input-list li{margin-bottom: 15px;}
 .input-list label{display: inline-block; width: 120px;}
@@ -69,3 +70,5 @@ li{ list-style: none;}
 .user-list td, .user-list th{ padding: 0 5px; }
 .user-list td td{ border: 1px solid #ccc;}
 .user-list thead th{ padding-bottom: 15px;border-bottom: 1px solid #ccc;}
+.view-interval-list li{ margin: 0 0 0 30px; line-height: 30px;}
+

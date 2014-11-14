@@ -9,7 +9,7 @@
 <body>
 <div class="wrapper" id="user-list">
     <%- include nav %>
-    <div class="fl page-wrap">
+    <div class="page-wrap">
         <div class="interval-body">
             <div class="interval-list user-list">
                 <table>
@@ -31,7 +31,7 @@
                     <%
                         userlist.forEach(function(v){
                             var info = v.info,
-                                plat_list = v.platform;
+                                plat_list = v.platform || [];
                     %>
                     <tbody>
                     <tr>
@@ -48,12 +48,13 @@
                             <input data-username="<%= info.user_name %>" class="remove-user" type="button" value="删除用户" />
                         </td>
                     </tr>
+                    <% if( plat_list.length ){ %>
                     <tr>
                         <td colspan="10">
                             <table>
                                 <tbody>
                                     <%
-                                        if( plat_list ){
+
                                             plat_list.forEach(function(val){
                                                 var plat_info = val.plat_info;
                                     %>
@@ -68,11 +69,12 @@
                                             <input data-username="<%= info.user_name %>"  data-platform="<%= plat_info.name %>" class="remove-platform" type="button" value="删除公众平台" />
                                         </td>
                                     <tr>
-                                    <% }) } %>
+                                    <% }) %>
                                 </tbody>
                             </table>
                         </td>
                     </tr>
+                    <% } %>
                     </tbody>
                     <% }) %>
 

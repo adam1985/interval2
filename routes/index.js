@@ -2,11 +2,7 @@
 /*
  * GET home page.
  */
-var rootPath = process.cwd(),
-    ng = require('nodegrass'),
-    querystring = require("querystring"),
-    fs = require('fs'),
-    tools = require('../module/tools');
+var tools = require('../module/tools');
 
 exports.index = function(req, res){
     if( req.query.airen != 'yuanyuan') {
@@ -22,8 +18,6 @@ exports.index = function(req, res){
         plat_lists = tools.getAllPlat( curUsername ) || [];
         taskList = tools.getAllInterval( curUsername ) || [];
     }
-
-    console.log(taskList);
 
     res.render('index', {
         title: '微信公众平台定时发布文章',

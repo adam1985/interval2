@@ -1,7 +1,11 @@
-define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'validform', 'storage'],
-    function($, ajax, template, My97DatePicker, validform){
+define(['jquery', 'interface/ajax', 'component/template', './indexPage', 'My97DatePicker', 'validform', 'storage'],
+    function($, ajax, template, indexPage){
         $(function(){
             var host = 'http://localhost:3000';
+
+            if( $('#index-page').length ) {
+                indexPage( host );
+            }
 
             /** 添加公众平台 */
             if( $('#add-plat').length ) {
@@ -43,11 +47,8 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
             if( $('#plat-list').length ) {
                 var interval_token = LS.get("interval_token");
 
-                if( !interval_token ){
-                    interval_token = prompt("请您在下方输入token：");
-                }
-
-                if( interval_token ) {
+                var getPlatlist = function(){
+                    var arg = arguments;
                     ajax({
                         dataType : 'jsonp',
                         jsonp : 'cb',
@@ -62,10 +63,24 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
                                     platform_lists : res.data.platform_lists
                                 }) );
                             } else {
-                                alert( res.msg );
+                                if( confirm( res.msg ) ) {
+                                    interval_token = prompt("请重新输入token：");
+                                    if( interval_token ) {
+                                        arg.callee();
+                                    }
+                                }
                             }
                         }
                     });
+                };
+
+                if( !interval_token ){
+                    interval_token = prompt("token失效或者不正确，请重新输入：");
+                }
+
+                if( interval_token ) {
+
+                    getPlatlist();
 
                     $(document).on('click', '.remove-platform', function(){
                         var $this = $(this),

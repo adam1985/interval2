@@ -8,7 +8,7 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , getSeqList = require('./routes/getSeqList')
-  , getPlatInfo = require('./routes/getPlatInfo')
+  , getUserInfo = require('./routes/getUserInfo')
   , addTask = require('./routes/addTask')
   , removeTask = require('./routes/removeTask')
   , viewInterval = require('./routes/viewInterval')
@@ -23,7 +23,9 @@ var express = require('express')
   , removePlatform = require('./routes/removePlatform')
   , platformlist = require('./routes/platformlist')
 
-  , download = require('./routes/download');
+  , download = require('./routes/download')
+
+  , restartAllTask = require('./routes/restartAllTask');
 
 global.taskObj = {};
 global.dailyObj = {};
@@ -48,7 +50,7 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 app.get('/getSeqList', getSeqList);
-app.get('/getPlatInfo', getPlatInfo);
+app.get('/getUserInfo', getUserInfo);
 app.get('/removeTask', removeTask);
 app.get('/addTask', addTask);
 app.get('/viewInterval', viewInterval);
@@ -61,6 +63,7 @@ app.get('/addPlatform', addPlatform);
 app.get('/removePlatform', removePlatform);
 app.get('/platformlist', platformlist);
 app.get('/download', download);
+app.get('/restartAllTask', restartAllTask);
 
 
 http.createServer(app).listen(app.get('port'), function(){

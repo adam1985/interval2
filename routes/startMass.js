@@ -1,9 +1,7 @@
 var ng = require('nodegrass'),
     querystring = require("querystring"),
     getMassList = require("./getMassList"),
-    getSeq = require("./getSeq"),
-    userConf = require('../config/userConf'),
-    rootPath = process.cwd();
+    getSeq = require("./getSeq");
 
 var sendMass = function(operation_seq, token, app_id, cookie, cb){
     var query = {
@@ -64,16 +62,23 @@ var sendMass = function(operation_seq, token, app_id, cookie, cb){
 };
 
 module.exports = function( config ){
-    var curUser = userConf[config.platform_name],
-        prevDay = dailyObj[config.platform_name],
+    var username = config.username,
+        plat_name = config.platform_name,
+        plat_info = tools.getPlat(username, plat_name),
+        prevDay,
         curDay = new Date().getDate();
+
+    dailyObj[username] = dailyObj[username] || {};
+
+    prevDay = dailyObj[username][plat_name];
+
     if( prevDay != curDay ) {
 
-        console.log(config.platform_name + ' mass start');
-        getSeq(curUser.user, curUser.pwd, function(operation_seq, token, loginRes, cookie){
+        console.log('用户：' + username + '，平台：' + plat_name + ' mass start');
+        getSeq(plat_info.username, plat_info.pwd, function(operation_seq, token, loginRes, cookie){
             var app_id = config.app_id;
             if( !app_id ) {
-                getMassList(config.platform_name, token, cookie, function(fsend_lists){
+                getMassList(plat_name, token, cookie, function(fsend_lists){
                     if( fsend_lists.length ) {
                         fsend_lists = fsend_lists.reverse();
                         app_id = fsend_lists[0].app_id;
@@ -84,17 +89,17 @@ module.exports = function( config ){
                         }
 
                         sendMass(operation_seq, token, app_id, cookie, function(data){
-                            console.log(config.platform_name + ' mass complete', data);
-                            dailyObj[config.platform_name] = curDay;
-                            config.cb(data, config.taskIndex, app_id, config.platform_name, title || null);
+                            console.log('用户：' + username + '，平台：' + plat_name + ' mass complete', data);
+                            dailyObj[username][plat_name] = curDay;
+                            config.cb(data, config.taskIndex, app_id, plat_name, title || null);
                         });
                     }
                 });
             } else {
                 sendMass(operation_seq, token, app_id, cookie, function(data){
-                    console.log(config.platform_name + ' mass complete', data);
-                    dailyObj[config.platform_name] = curDay;
-                    config.cb(data, config.taskIndex, app_id, config.platform_name, config.title);
+                    console.log('用户：' + username + '，平台：' + plat_name + ' mass complete', data);
+                    dailyObj[username][plat_name] = curDay;
+                    config.cb(data, config.taskIndex, app_id, plat_name, config.title);
                 });
             }
         });

@@ -1,12 +1,13 @@
 define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'validform'],
     function($, ajax, template){
-        return function(){
+        return function( host ){
 
             var getFsendList = function( platform_name, cb){
                     ajax({
-                        url : '/getSeqList',
+                        url : host + '/getSeqList',
                         type : 'get',
-                        dataType : 'json',
+                        dataType : 'jsonp',
+                        jsonp : 'cb',
                         data : {
                             platform_name : platform_name
                         },
@@ -19,42 +20,51 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
                             }
                         }
                     });
+                },
+
+                getUserInfo = function(){
+                    var arg = arguments;
+
+                    ajax({
+                        dataType : 'jsonp',
+                        jsonp : 'cb',
+                        url : host + '/getUserInfo',
+                        data : {
+                            token : interval_token
+                        },
+                        success : function( res ){
+                            if( res.success ) {
+                                LS.set("interval_token", interval_token);
+                                $('#platform-select').html( template.render('plat_list_template', {
+                                    plat_lists : res.data.plat_lists
+                                }));
+
+                                $('#task-list').html( template.render('tasklist-template', {
+                                    taskList : res.data.taskList
+                                }));
+
+                            } else {
+                                if ( confirm( res.msg )){
+                                    interval_token = prompt("请重新输入token：");
+                                    if( interval_token ) {
+                                        arg.callee();
+                                    }
+                                }
+
+                            }
+                        }
+                    });
                 };
 
-            $(document).on('change', '.user-select', function(){
-                var platform_name = $('#platform-select').val(),
-                    runMode = $('#run-mode').val();
+            var interval_token = LS.get("interval_token");
 
-                if( runMode == 1) {
-                    getFsendList(platform_name);
-                }
+            if( !interval_token ){
+                interval_token = prompt("token失效或者不正确，请重新输入：");
+            }
 
-                ajax({
-                    url : '/getUserInfo',
-                    type : 'get',
-                    dataType : 'json',
-                    data : {
-                        username : this.value
-                    },
-                    success : function( res ){
-                        if( res.success ) {
-                            $('#platform-select').html( template.render('plat_list_template', {
-                                plat_lists : res.data.plat_lists
-                            }));
-
-                            $('#task-list').html( template.render('tasklist-template', {
-                                taskList : res.data.taskList
-                            }));
-
-                        } else {
-                            alert( res.msg );
-                        }
-                    }
-                });
-
-
-            });
-
+            if( interval_token ) {
+                getUserInfo();
+            }
 
             $(document).on('change', '.platform-select', function(){
                 var platform_name = this.value;
@@ -113,10 +123,18 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
                         value : selectText
                     });
                 }
+
+                if( interval_token ){
+                    serializeArray.push({
+                        name : "token",
+                        value : interval_token
+                    });
+                }
                 ajax({
-                    url : '/addTask',
+                    url : host + '/addTask',
                     type : 'get',
-                    dataType : 'json',
+                    dataType : 'jsonp',
+                    jsonp : 'cb',
                     data : serializeArray,
                     success : function( res ){
                         if( res.success ) {
@@ -140,9 +158,10 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
                     tr = $this.closest('tr');
                 if( confirm('是否真要删除该定时任务？') ) {
                     ajax({
-                        url: '/removeTask',
+                        url: host + '/removeTask',
                         type: 'get',
-                        dataType: 'json',
+                        dataType: 'jsonp',
+                        jsonp : 'cb',
                         data: {
                             taskindex: taskindex,
                             username: username,
@@ -160,18 +179,5 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
             });
 
 
-            /** 重启所有定时任务 */
-            $(document).on('click', '.start-all-interval', function(){
-                $.ajax({
-                    url : '/restartAllTask',
-                    type : 'get',
-                    dataType : 'json',
-                    success : function( res ){
-                        if( res.success ) {
-                            alert('操作成功!');
-                        }
-                    }
-                });
-            });
         };
 });

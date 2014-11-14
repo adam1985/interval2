@@ -1,12 +1,21 @@
 var tools = require('../module/tools');
 
 module.exports = function(req, res){
-	var callback = req.query.cb;
+	var callback = req.query.cb,
+        taskInex = req.query.taskIndex;
 
-	tools.interfaceDone(res, {
-        success : true,
-        data : JSON.stringify(taskObj)
-    }, callback);
-
+    if ( taskInex ) {
+        tools.interfaceDone(res, {
+            success : true,
+            data : {
+                has : tools.hasInterval( taskInex )
+            }
+        }, callback);
+    } else {
+        res.render('viewInterval', {
+            title: '查看定时任务',
+            data : taskObj
+        });
+    }
 
 };

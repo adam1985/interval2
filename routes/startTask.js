@@ -3,7 +3,7 @@ var fs = require('fs'),
     tools = require('../module/tools'),
     startMass = require("./startMass");
 
-module.exports = function( query ){
+module.exports = function( query, cb ){
     var mode = +query.mode,
         username = query.username,
         platform = query.platform,
@@ -14,7 +14,6 @@ module.exports = function( query ){
         timeParams,
         isNew = !query.taskIndex;
         task_index = query.taskIndex || +new Date();
-
 
     var writeLoger = function(mode, data, taskIndex){
 
@@ -53,13 +52,14 @@ module.exports = function( query ){
         rule.second = +timeParams[2];
 
         task = schedule.scheduleJob(rule, function(){
-            startMass({
+            /*startMass({
+                username : username,
                 platform_name : platform,
                 taskIndex : task_index,
                 cb : function( data, taskIndex, app_id, platform_name, title ){
                     writeLoger( data, taskIndex);
                 }
-            });
+            });*/
         });
 
     } else if( mode == 1){
@@ -73,7 +73,8 @@ module.exports = function( query ){
             +timeParams[5]);
 
         task = schedule.scheduleJob(date, function(){
-            startMass({
+            /*startMass({
+                username : username,
                 platform_name : platform,
                 taskIndex : task_index,
                 app_id : app_id,
@@ -81,7 +82,7 @@ module.exports = function( query ){
                 cb : function( data, taskIndex, app_id, platform_name, title ){
                     writeLoger( data, taskIndex);
                 }
-            });
+            });*/
         });
     }
 
@@ -112,6 +113,7 @@ module.exports = function( query ){
         }, 'interval');
     }
 
+    cb && cb( taskData );
 
    return [taskData];
 
