@@ -1,6 +1,7 @@
 var ng = require('nodegrass'),
     querystring = require("querystring"),
     getMassList = require("./getMassList"),
+    tools = require('../module/tools'),
     getSeq = require("./getSeq");
 
 var sendMass = function(operation_seq, token, app_id, cookie, cb){

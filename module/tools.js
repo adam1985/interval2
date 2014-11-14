@@ -446,7 +446,7 @@ tools_.getAllInterval = function( username ) {
     return allInterval;
 };
 
-tools_.updateInterval = function( username, plat_name, taskindex , cb){
+tools_.updateInterval = function( username, plat_name, taskIndex , cb){
     var userlist = tools_.getUserlist(),
         curUser = userlist[username],
         plat_list = [],

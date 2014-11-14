@@ -52,14 +52,14 @@ module.exports = function( query, cb ){
         rule.second = +timeParams[2];
 
         task = schedule.scheduleJob(rule, function(){
-            /*startMass({
+            startMass({
                 username : username,
                 platform_name : platform,
                 taskIndex : task_index,
                 cb : function( data, taskIndex, app_id, platform_name, title ){
-                    writeLoger( data, taskIndex);
+                    writeLoger( mode, data, taskIndex);
                 }
-            });*/
+            });
         });
 
     } else if( mode == 1){
@@ -73,16 +73,16 @@ module.exports = function( query, cb ){
             +timeParams[5]);
 
         task = schedule.scheduleJob(date, function(){
-            /*startMass({
+            startMass({
                 username : username,
                 platform_name : platform,
                 taskIndex : task_index,
                 app_id : app_id,
                 title : title,
                 cb : function( data, taskIndex, app_id, platform_name, title ){
-                    writeLoger( data, taskIndex);
+                    writeLoger( mode, data, taskIndex);
                 }
-            });*/
+            });
         });
     }
 
