@@ -1,8 +1,8 @@
 define(['jquery', 'interface/ajax', 'component/template', './indexPage', 'My97DatePicker', 'validform', 'storage'],
     function($, ajax, template, indexPage){
         $(function(){
-            var host = 'http://interval.sturgeon.mopaas.com';
-
+            //var host = 'http://interval.sturgeon.mopaas.com';
+            var host = 'http://localhost:3000';
             if( $('#index-page').length ) {
                 indexPage( host );
             }

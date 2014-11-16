@@ -1,13 +1,14 @@
 
 var rootPath = process.cwd(),
-    userConf = require('../config/userConf'),
+    tools = require('../module/tools'),
     login = require('./login'),
     getMassList = require('./getMassList');
 
-module.exports = function(platform_name, cb){
-    var curUser = userConf[platform_name];
+module.exports = function(username, platform_name, cb){
+    var userlist = tools.getUserlist(),
+        plat = tools.getPlat(username, platform_name);
 
-    login.loginWeixin(curUser.user, curUser.pwd, function( loginRes, cookie){
+    login.loginWeixin(plat.username, plat.pwd, function( loginRes, cookie ){
         if(loginRes.base_resp.ret == 0) {
             var redirect_url = loginRes.redirect_url,
                 rex = /token=(\d+)/;

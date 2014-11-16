@@ -467,7 +467,7 @@ tools_.updateInterval = function( username, plat_name, taskIndex , cb){
 
     });
 
-    return allInterval;
+    tools_.setUserlist( userlist );
 };
 
 tools_.hasInterval = function( taskIndex ){

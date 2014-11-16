@@ -2,13 +2,14 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
     function($, ajax, template){
         return function( host ){
 
-            var getFsendList = function( platform_name, cb){
+            var getFsendList = function( token, platform_name, cb){
                     ajax({
                         url : host + '/getSeqList',
                         type : 'get',
                         dataType : 'jsonp',
                         jsonp : 'cb',
                         data : {
+                            token : token,
                             platform_name : platform_name
                         },
                         success : function( res ){
@@ -35,9 +36,22 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
                         success : function( res ){
                             if( res.success ) {
                                 LS.set("interval_token", interval_token);
-                                $('#platform-select').html( template.render('plat_list_template', {
+                                var plat_lists = res.data.plat_lists || [],
+                                    intervalForm = $('#interval-form'),
+                                    platformSelect = $('#platform-select');
+
+
+                                if( plat_lists.length ){
+                                    intervalForm.find('.control-select').removeAttr('disabled');
+
+                                } else {
+                                    intervalForm.find('.control-select').attr('disabled', 'disabled');
+                                }
+
+                                platformSelect.html( template.render('plat_list_template', {
                                     plat_lists : res.data.plat_lists
                                 }));
+
 
                                 $('#task-list').html( template.render('tasklist-template', {
                                     taskList : res.data.taskList
@@ -56,7 +70,9 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
                     });
                 };
 
-            var interval_token = LS.get("interval_token");
+            var interval_token = LS.get("interval_token"),
+                platformSelect = $('#platform-select'),
+                runModeSelect = $('#run-mode');
 
             if( !interval_token ){
                 interval_token = prompt("token失效或者不正确，请重新输入：");
@@ -68,21 +84,22 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
 
             $(document).on('change', '.platform-select', function(){
                 var platform_name = this.value;
-                var runMode = $('#run-mode').val();
+                var runMode = runModeSelect.val();
 
                 if( runMode == 1) {
-                    getFsendList(platform_name);
+                    getFsendList(interval_token, platform_name);
                 }
             });
 
             $(document).on('change', '.run-mode', function(){
-                var runMode = this.value;
+                var runMode = this.value,
+                    platform_name = platformSelect.val();
                 $('.datepicker').attr('id', 'datepicker' + runMode).val('');
                 if ( runMode == 0 ){
                     $('#fsend-box').hide();
                     $('.fsend-select').attr('disabled', true);
                 } else if( runMode == 1)  {
-                    getFsendList($('#platform-select').val(), function(){
+                    getFsendList(interval_token, platform_name, function(){
                         $('.fsend-select').attr('disabled', false);
                         $('#fsend-box').show();
                     });

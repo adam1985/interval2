@@ -48,6 +48,7 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+
 app.get('/', routes.index);
 app.get('/getSeqList', getSeqList);
 app.get('/getUserInfo', getUserInfo);

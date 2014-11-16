@@ -1,5 +1,5 @@
 require.config({
-    baseUrl: 'assets/src',
+    "baseUrl": 'assets/src',
     "paths": {
         "jquery": "jquery/jquery",
         "My97DatePicker" : "../My97DatePicker/WdatePicker",

@@ -2,12 +2,13 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
     function($, ajax, template){
         return function(){
 
-            var getFsendList = function( platform_name, cb){
+            var getFsendList = function( username, platform_name, cb){
                     ajax({
                         url : '/getSeqList',
                         type : 'get',
                         dataType : 'json',
                         data : {
+                            username : username,
                             platform_name : platform_name
                         },
                         success : function( res ){
@@ -21,12 +22,17 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
                     });
                 };
 
+            var userSelect = $('#user-select'),
+                platformSelect = $('#platform-select'),
+                runModeSelect = $('#run-mode');
+
             $(document).on('change', '.user-select', function(){
-                var platform_name = $('#platform-select').val(),
-                    runMode = $('#run-mode').val();
+                var username = userSelect.val(),
+                    platform_name = platformSelect.val(),
+                    runMode = runModeSelect.val();
 
                 if( runMode == 1) {
-                    getFsendList(platform_name);
+                    getFsendList(username, platform_name);
                 }
 
                 ajax({
@@ -38,13 +44,25 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
                     },
                     success : function( res ){
                         if( res.success ) {
-                            $('#platform-select').html( template.render('plat_list_template', {
-                                plat_lists : res.data.plat_lists
-                            }));
+                            var plat_lists = res.data.plat_lists || [],
+                                intervalForm = $('#interval-form'),
+                                platformSelect = $('#platform-select');
 
-                            $('#task-list').html( template.render('tasklist-template', {
-                                taskList : res.data.taskList
-                            }));
+                                if( plat_lists.length ){
+                                    intervalForm.find('.control-select').removeAttr('disabled');
+
+                                } else {
+                                    intervalForm.find('.control-select').attr('disabled', 'disabled');
+                                }
+
+                                platformSelect.html( template.render('plat_list_template', {
+                                    plat_lists : plat_lists
+                                }));
+
+
+                                $('#task-list').html( template.render('tasklist-template', {
+                                    taskList : res.data.taskList
+                                }));
 
                         } else {
                             alert( res.msg );
@@ -57,22 +75,25 @@ define(['jquery', 'interface/ajax', 'component/template', 'My97DatePicker', 'val
 
 
             $(document).on('change', '.platform-select', function(){
-                var platform_name = this.value;
-                var runMode = $('#run-mode').val();
+                var username = userSelect.val(),
+                    platform_name = this.value,
+                    runMode = runModeSelect.val();
 
                 if( runMode == 1) {
-                    getFsendList(platform_name);
+                    getFsendList(username, platform_name);
                 }
             });
 
             $(document).on('change', '.run-mode', function(){
-                var runMode = this.value;
+                var runMode = this.value,
+                    username = userSelect.val(),
+                    platform_name = platformSelect.val();
                 $('.datepicker').attr('id', 'datepicker' + runMode).val('');
                 if ( runMode == 0 ){
                     $('#fsend-box').hide();
                     $('.fsend-select').attr('disabled', true);
                 } else if( runMode == 1)  {
-                    getFsendList($('#platform-select').val(), function(){
+                    getFsendList(username, platform_name, function(){
                         $('.fsend-select').attr('disabled', false);
                         $('#fsend-box').show();
                     });

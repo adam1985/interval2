@@ -9,7 +9,7 @@ module.exports = function (grunt) {
                 files: [
                     {
                         src: ['assets/styles/layout.css'],
-                        dest: 'assets/dist/layout.min.css'
+                        dest: 'assets/dist/layout.css'
                     }
                 ]
             }
@@ -22,11 +22,13 @@ module.exports = function (grunt) {
                     "paths": {
                         "jquery": "jquery/jquery",
                         "My97DatePicker" : "../My97DatePicker/WdatePicker",
-                        "validform" : "component/Validform_v5.3.2"
+                        "validform" : "component/Validform_v5.3.2",
+                        "storage" : "component/storage"
                     },
                     "shim": {
                         "My97DatePicker" : [],
-                        "validform" : ["jquery"]
+                        "validform" : ["jquery"],
+                        "storage" : ["jquery"]
                     },
                     "exclude": ["My97DatePicker"],
                     //"dir": "assets/dist",
@@ -50,9 +52,7 @@ module.exports = function (grunt) {
             },
             css: {
                 files: [
-                    './assets/styles/swiper.css',
-                    './assets/styles/scrollbar.css',
-                    './assets/styles/index.css'],
+                    'assets/styles/layout.css'],
                 tasks: ['cssmin']
             }
         }
