@@ -449,8 +449,7 @@ tools_.getAllInterval = function( username ) {
 tools_.updateInterval = function( username, plat_name, taskIndex , cb){
     var userlist = tools_.getUserlist(),
         curUser = userlist[username],
-        plat_list = [],
-        allInterval = [];
+        plat_list = [];
 
     if( curUser ) {
         plat_list = curUser.platform || [];

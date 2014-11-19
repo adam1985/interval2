@@ -12,7 +12,7 @@ module.exports = function( query, cb ){
         title = query.title,
         task,
         timeParams,
-        isNew = !query.taskIndex;
+        isNew = !query.taskIndex,
         task_index = query.taskIndex || +new Date();
 
     var writeLoger = function(mode, data, taskIndex){
@@ -24,7 +24,6 @@ module.exports = function( query, cb ){
         } else {
             status = -1;
         }
-
 
         tools.updateInterval(username, platform, taskIndex, function( obj ){
             obj.prevTime = new Date().format("yyyy-MM-dd hh:mm:ss");
