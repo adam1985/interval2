@@ -36,7 +36,7 @@ module.exports = function(req, res){
     } else {
         tools.interfaceDone(res,  {
             success : false,
-            msg : "没有找到该用户!"
+            msg : "token失效或者不正确，点确认重新输入token!"
         }, callback);
     }
 

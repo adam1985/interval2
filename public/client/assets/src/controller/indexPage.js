@@ -10,8 +10,7 @@ define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template',
                 fsendSelect = $('#fsend-select'),
                 tasklist = $('#task-list'),
                 datepicker = $('.datepicker'),
-                alertModal,
-                promptMode;
+                alertMode;
 
             var getFsendList = function( token, platform_name, cb){
                     ajax({
@@ -48,10 +47,12 @@ define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template',
                         },
                         success : function( res ){
                             if( res.success ) {
+                                if( alertMode ){
+                                    alertMode.hide();
+                                }
                                 LS.set("interval_token", interval_token);
                                 var plat_lists = res.data.plat_lists || [],
                                     platformSelect = $('#platform-select');
-
 
                                 if( plat_lists.length ){
                                     intervalForm.find('.control-select').removeAttr('disabled');
@@ -70,18 +71,23 @@ define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template',
                                 }));
 
                             } else {
-                                utility.modal( 'modal-template', {
+                                alertMode = utility.modal( 'modal-template', {
                                     id : 'alert-model',
                                     title : '提示',
                                     body : res.msg
-                                });
-                                /*if ( confirm( res.msg )){
-                                    interval_token = prompt("请重新输入token：");
-                                    if( interval_token ) {
-                                        arg.callee();
-                                    }
-                                }*/
+                                }, function(){
+                                    alertMode = utility.modal( 'modal-template', {
+                                        id : 'alert-model',
+                                        title : '请重新输入token',
+                                        body : template.render('prompt-template')
+                                    }, function( modal, $modal ){
+                                        interval_token = $modal.find('.token').val();
+                                        if( interval_token ) {
+                                            arg.callee();
+                                        }
 
+                                    });
+                                });
                             }
                         }
                     });
@@ -116,10 +122,18 @@ define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template',
             });*/
 
             if( !interval_token ){
-                interval_token = prompt("token失效或者不正确，请重新输入：");
-            }
+                alertMode = utility.modal( 'modal-template', {
+                    id : 'alert-model',
+                    title : 'token失效或者不正确，请重新输入',
+                    body : template.render('prompt-template')
+                }, function( modal, $modal ){
+                    interval_token = $modal.find('.token').val();
+                    if( interval_token ) {
+                        getUserInfo();
+                    }
 
-            if( interval_token ) {
+                });
+            } else {
                 getUserInfo();
             }
 
@@ -215,7 +229,13 @@ define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template',
                     plat_name = $this.attr('data-platform'),
                     mode = $this.attr('data-mode'),
                     tr = $this.closest('tr');
-                if( confirm('是否真要删除该定时任务？') ) {
+
+                utility.modal( 'modal-template', {
+                    id : 'alert-model',
+                    title : '提示',
+                    body : '是否真要删除该定时任务？'
+                }, function(modal){
+                    modal.hide();
                     ajax({
                         url: host + '/removeTask',
                         type: 'get',
@@ -233,7 +253,7 @@ define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template',
                             }
                         }
                     });
-                }
+                });
 
             });
 

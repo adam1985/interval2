@@ -1,5 +1,5 @@
-define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template', 'My97DatePicker', 'validform'],
-    function($, bt, ajax, template){
+define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template', './utility', 'My97DatePicker', 'validform'],
+    function($, bt, ajax, template, utility){
         return function( host ){
             var platformForm = $('#platform-form');
             platformForm.Validform({
@@ -27,7 +27,11 @@ define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template',
                                 platformForm[0].reset();
 
                             }
-                            alert(res.msg);
+                            utility.modal( 'modal-template', {
+                                id : 'alert-model',
+                                title : '提示',
+                                body : res.msg
+                            });
                         }
                     });
                     return false;
