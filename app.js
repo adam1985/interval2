@@ -48,6 +48,15 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+app.get(/^\/(?!assets|client)/, function(req, res, next){
+    var query = req.query || {}, queryLen = Object.keys( query ).length ;
+    console.log(queryLen == 1 && query.airen == 'yuanyuan');
+    if( queryLen > 1 || queryLen == 1 && query.airen == 'yuanyuan' ) {
+        next();
+    } else {
+        res.send(403, 'forbidden!');
+    }
+});
 
 app.get('/', routes.index);
 app.get('/getSeqList', getSeqList);

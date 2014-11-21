@@ -1,7 +1,11 @@
 define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template', './utility', 'My97DatePicker', 'validform'],
     function($, bt, ajax, template, utility){
         return function( host ){
-            var platformForm = $('#platform-form');
+            var platformForm = $('#platform-form'),
+                interval_token = LS.get("interval_token");
+            if( interval_token ) {
+                $('#token').val( interval_token );
+            }
             platformForm.Validform({
                 btnSubmit:"#add-platform",
                 tiptype:function(msg,o,cssctl){
@@ -31,6 +35,9 @@ define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template',
                                 id : 'alert-model',
                                 title : '提示',
                                 body : res.msg
+                            }, function( modal ){
+                                modal.hide();
+                                location.href = 'index.html';
                             });
                         }
                     });

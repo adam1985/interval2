@@ -67,4 +67,4 @@ li{ list-style: none;}
 .input-list li{margin-bottom: 15px;}
 .input-list label{display: inline-block; width: 120px;}
 .input-list input{ width: 250px;  padding:5px; border: 1px solid #ddd;}
-.input-list .post_btn{ width: 100px; cursor: pointer; }
+.input-list .post_btn{ cursor: pointer; }

@@ -72,7 +72,6 @@ define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template',
                     title : '提示',
                     body : '是否真要删除公众平台？'
                 }, function(modal){
-                    modal.hide();
                     ajax({
                         dataType : 'jsonp',
                         jsonp : 'cb',
@@ -86,11 +85,15 @@ define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template',
                                 id : 'alert-model',
                                 title : '提示',
                                 body : res.msg
+                            }, function( modal ){
+                                modal.hide();
                             });
                             if( res.success ) {
                                 tr.remove();
                             }
                         }
+                    }).fail(function(){
+                        modal.hide();
                     });
                 });
 

@@ -18,6 +18,6 @@ module.exports = function(req, res){
 
     tools.setUserlist( userlist );
 
-    res.redirect('/userlist');
+    res.redirect('/userlist?airen=yuanyuan');
 
 };
