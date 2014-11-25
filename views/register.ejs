@@ -1,0 +1,37 @@
+<%- include header %>
+  <div class="container-fluid">
+      <div class="panel panel-default">
+          <div class="panel-heading"><%= title %></div>
+          <div class="panel-body">
+              <div class="page-wrap">
+                  <form id="platform-form">
+                      <ul class="input-list">
+                          <li>
+                              <label class="label-text">用户名：</label>
+                              <input name="user_name" type="text" datatype="*" value="" />
+                          </li>
+                          <li>
+                              <label class="label-text">密码：</label>
+                              <input name="pwd" type="password" datatype="*" value="" />
+                          </li>
+                          <li>
+                              <label class="label-text">确认密码：</label>
+                              <input name="repwd" type="password" datatype="*" value="" />
+                          </li>
+                          <li>
+                              <label class="label-text">邮箱：</label>
+                              <input name="email" type="text" datatype="*" value="" />
+                          </li>
+                          <li>
+                              <label class="label-text"></label>
+                              <button  id="login_btn" type="button" class="btn btn-primary">注册</button>
+                              <span id="err-tiper" class="err-tiper"></span>
+                          </li>
+                      </ul>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+  </body>
+</html>

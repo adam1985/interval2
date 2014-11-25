@@ -47,9 +47,6 @@ define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template',
                         },
                         success : function( res ){
                             if( res.success ) {
-                                if( alertMode ){
-                                    alertMode.hide();
-                                }
                                 LS.set("interval_token", interval_token);
                                 var plat_lists = res.data.plat_lists || [],
                                     platformSelect = $('#platform-select');
@@ -71,23 +68,29 @@ define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template',
                                 }));
 
                             } else {
-                                alertMode = utility.modal( 'modal-template', {
-                                    id : 'alert-model',
-                                    title : '提示',
-                                    body : res.msg
-                                }, function(){
-                                    alertMode = utility.modal( 'modal-template', {
+                                utility.modal( 'modal-template', {
+                                    data : {
                                         id : 'alert-model',
-                                        title : '请重新输入token',
-                                        body : template.render('prompt-template')
-                                    }, function( modal, $modal ){
-                                        interval_token = $modal.find('.token').val();
-                                        if( interval_token ) {
-                                            arg.callee();
-                                        }
-
-                                    });
+                                        title : '提示',
+                                        body : res.msg
+                                    },
+                                    cb :  function(){
+                                        utility.modal( 'modal-template', {
+                                            data : {
+                                                id : 'alert-model',
+                                                title : '请重新输入token',
+                                                body : template.render('prompt-template')
+                                            },
+                                            cb : function( modal, $modal ){
+                                                interval_token = $modal.find('.token').val();
+                                                if( interval_token ) {
+                                                    arg.callee();
+                                                }
+                                            }
+                                        });
+                                    }
                                 });
+
                             }
                         }
                     });
@@ -122,16 +125,19 @@ define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template',
             });*/
 
             if( !interval_token ){
-                alertMode = utility.modal( 'modal-template', {
-                    id : 'alert-model',
-                    title : 'token失效或者不正确，请重新输入',
-                    body : template.render('prompt-template')
-                }, function( modal, $modal ){
-                    interval_token = $modal.find('.token').val();
-                    if( interval_token ) {
-                        getUserInfo();
-                    }
+                utility.modal( 'modal-template', {
+                    data : {
+                        id : 'alert-model',
+                        title : 'token失效或者不正确，请重新输入',
+                        body : template.render('prompt-template')
+                    },
+                    cb : function( modal, $modal ){
+                        interval_token = $modal.find('.token').val();
+                        if( interval_token ) {
+                            getUserInfo();
+                        }
 
+                    }
                 });
             } else {
                 getUserInfo();
@@ -211,11 +217,12 @@ define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template',
                                 taskList : res.data
                             }));
                         } else {
-                            utility.modal( 'modal-template', {
+
+                            utility.modal( 'modal-template', {data: {
                                 id : 'alert-model',
                                 title : '提示',
                                 body : res.msg
-                            });
+                            }});
                         }
                     }
                 });
@@ -230,17 +237,16 @@ define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template',
                     mode = $this.attr('data-mode'),
                     tr = $this.closest('tr');
 
-                utility.modal( 'modal-template', {
-                    id : 'alert-model',
-                    title : '提示',
-                    body : '是否真要删除该定时任务？'
-                }, function(modal){
-                    modal.hide();
+                utility.modal('modal-template', {data: {
+                    id: 'alert-model',
+                    title: '提示',
+                    body: '是否真要删除该定时任务？'
+                }, cb: function() {
                     ajax({
                         url: host + '/removeTask',
                         type: 'get',
                         dataType: 'jsonp',
-                        jsonp : 'cb',
+                        jsonp: 'cb',
                         data: {
                             taskindex: taskindex,
                             username: username,
@@ -253,7 +259,7 @@ define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template',
                             }
                         }
                     });
-                });
+                }});
 
             });
 

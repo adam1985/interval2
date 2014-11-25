@@ -7,6 +7,8 @@ var express = require('express')
   , routes = require('./routes')
   , http = require('http')
   , path = require('path')
+  , userlogin = require('./routes/userlogin')
+  , register = require('./routes/register')
   , getSeqList = require('./routes/getSeqList')
   , getUserInfo = require('./routes/getUserInfo')
   , addTask = require('./routes/addTask')
@@ -48,17 +50,9 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.get(/^\/(?!assets|client)/, function(req, res, next){
-    var query = req.query || {}, queryLen = Object.keys( query ).length ;
-    console.log(queryLen == 1 && query.airen == 'yuanyuan');
-    if( queryLen > 1 || queryLen == 1 && query.airen == 'yuanyuan' ) {
-        next();
-    } else {
-        res.send(403, 'forbidden!');
-    }
-});
-
 app.get('/', routes.index);
+app.get('/userlogin', userlogin);
+app.get('/register', register);
 app.get('/getSeqList', getSeqList);
 app.get('/getUserInfo', getUserInfo);
 app.get('/removeTask', removeTask);

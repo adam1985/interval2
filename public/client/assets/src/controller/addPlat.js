@@ -32,12 +32,14 @@ define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template',
 
                             }
                             utility.modal( 'modal-template', {
-                                id : 'alert-model',
-                                title : '提示',
-                                body : res.msg
-                            }, function( modal ){
-                                modal.hide();
-                                location.href = 'index.html';
+                                data : {
+                                    id : 'alert-model',
+                                    title : '提示',
+                                    body : res.msg
+                                },
+                                cb : function(){
+                                    location.href = 'index.html';
+                                }
                             });
                         }
                     });

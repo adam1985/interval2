@@ -8,12 +8,16 @@ define(['jquery', 'component/template', 'component/bootstrap'], function ($, tem
 
     var utility_ = {};
 
-    var modal = function( templateId, data, cb ){
+    var modal = function( templateId, config ){
             this.templateId = templateId;
-            this.data = data;
-            this.cb = cb;
+            this.data = config.data;
+            this.cb = config.cb || $.noop;
+            this.options = config.options || {};
+            this.buttons = config.buttons || [
+                { type : 'ok', class: 'btn-primary btn-ok', text : '确定' }
+            ];
             this.jqModal = this.createModal();
-            this.addEvent( cb );
+            this.addEvent( this.cb );
     };
 
     modal.prototype.createModal = function(){
@@ -22,7 +26,7 @@ define(['jquery', 'component/template', 'component/bootstrap'], function ($, tem
         }));
 
         var modal = $('#' + this.data.id);
-        modal.modal();
+        modal.modal( this.options );
         return modal;
     };
 
@@ -56,22 +60,15 @@ define(['jquery', 'component/template', 'component/bootstrap'], function ($, tem
         btnOk.off('click');
 
         btnOk.on('click', function(){
-            if( cb == $.noop ) {
-                self.hide();
-            } else {
+            self.hide(function(){
                 cb( self, self.jqModal );
-            }
+            });
 
         });
 
         return this;
     };
 
-    modal.prototype.toggle = function(){
-        var self = this;
-        this.jqModal.modal('toggle');
-        return this;
-    };
 
     modal.prototype.update = function( data, cb){
         cb = cb || $.noop;
@@ -87,7 +84,7 @@ define(['jquery', 'component/template', 'component/bootstrap'], function ($, tem
 
     var modalState = {};
     utility_.modal = function( templateId, data, cb ){
-        var _modal = modalState[templateId], isS = true;
+        var _modal = modalState[templateId];
         if( modalState[templateId] ) {
             _modal.update( data, cb );
         } else {
