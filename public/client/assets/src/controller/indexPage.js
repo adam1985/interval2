@@ -82,6 +82,7 @@ define(['jquery', 'component/bootstrap', 'interface/ajax', 'component/template',
                                                 body : template.render('prompt-template')
                                             },
                                             cb : function( modal, $modal ){
+
                                                 interval_token = $modal.find('.token').val();
                                                 if( interval_token ) {
                                                     arg.callee();
